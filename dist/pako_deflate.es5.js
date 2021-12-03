@@ -1255,9 +1255,9 @@
    * Check if the data type is TEXT or BINARY, using the following algorithm:
    * - TEXT if the two conditions below are satisfied:
    *    a) There are no non-portable control characters belonging to the
-   *       "black list" (0..6, 14..25, 28..31).
+   *       "block list" (0..6, 14..25, 28..31).
    *    b) There is at least one printable character belonging to the
-   *       "white list" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).
+   *       "allow list" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).
    * - BINARY otherwise.
    * - The following partially-portable control characters form a
    *   "gray list" that is ignored in this detection algorithm:
@@ -1267,13 +1267,13 @@
 
 
   var detect_data_type = function detect_data_type(s) {
-    /* black_mask is the bit mask of black-listed bytes
+    /* black_mask is the bit mask of block-listed bytes
      * set bits 0..6, 14..25, and 28..31
      * 0xf3ffc07f = binary 11110011111111111100000001111111
      */
     var black_mask = 0xf3ffc07f;
     var n;
-    /* Check for non-textual ("black-listed") bytes. */
+    /* Check for non-textual ("block-listed") bytes. */
 
     for (n = 0; n <= 31; n++, black_mask >>>= 1) {
       if (black_mask & 1 && s.dyn_ltree[n * 2]
@@ -1282,7 +1282,7 @@
         return Z_BINARY;
       }
     }
-    /* Check for textual ("white-listed") bytes. */
+    /* Check for textual ("allow-listed") bytes. */
 
 
     if (s.dyn_ltree[9 * 2]
@@ -1302,7 +1302,7 @@
         return Z_TEXT;
       }
     }
-    /* There are no "black-listed" or "white-listed" bytes:
+    /* There are no "block-listed" or "allow-listed" bytes:
      * this stream either is empty or has tolerated ("gray-listed") bytes only.
      */
 

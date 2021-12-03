@@ -664,7 +664,7 @@
      */
 
     /* set up for code type */
-    // poor man optimization - use if-else instead of switch,
+    // poor person optimization - use if-else instead of switch,
     // to avoid deopts in old v8
     if (type === CODES$1) {
       base = extra = work;    /* dummy value--not used */
